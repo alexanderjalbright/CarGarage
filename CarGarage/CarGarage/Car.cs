@@ -14,6 +14,14 @@ namespace CarGarage
             GasLevel = MaxGasLevel;
         }
 
+        public Car(int startGasLevel)
+        {
+            Speed = 0;
+            MaxGasLevel = 1000;
+            MinGasLevel = 0;
+            GasLevel = startGasLevel;
+        }
+
         public int Speed { get; private set; }
 
         public int MaxGasLevel { get; }
@@ -23,7 +31,6 @@ namespace CarGarage
         public int GasLevel { get; private set; }
 
         public bool CarStarted { get; private set; }
-        
 
         public void Accelerate()
         {

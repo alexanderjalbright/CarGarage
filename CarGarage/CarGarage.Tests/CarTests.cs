@@ -111,8 +111,14 @@ namespace CarGarage.Tests
         {
             // Tests ToggleEngine() method turns car off when its on
             // Arrange
+            Car firstCar = new Car();
+            firstCar.ToggleEngine();
+
             // Act
+            firstCar.ToggleEngine();
+
             // Assert
+            Assert.False(firstCar.CarStarted);
         }
     }
 }

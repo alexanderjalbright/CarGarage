@@ -13,8 +13,6 @@ namespace CarGarage
         }
 
         public List<Car> ParkingSpots { get; private set; }
-        
-        public Car SelectedCar { get; private set; }
 
         public bool IsCarSelected { get; private set; }
 
@@ -42,19 +40,13 @@ namespace CarGarage
             }
         }
 
-        public void CheckoutCar(int whichCar)
+        public void CheckoutCar()
         {
-            SelectedCar = ParkingSpots[whichCar];
             IsCarSelected = true;
         }
 
         public void ReturnCar()
         {
-            // This is to reorder cars to most recently used
-            Car tempCar = SelectedCar;
-            ParkingSpots.Remove(ParkingSpots[ParkingSpots.IndexOf(SelectedCar)]);
-            ParkingSpots.Add(tempCar);
-
             IsCarSelected = false;
         }
 

@@ -9,19 +9,13 @@ namespace CarGarage
         {
             Garage myGarage = Intro();
 
-            
-
-            
-
             Menu(myGarage);
-
-
             
         }
 
         static Garage Intro()
         {
-            Console.WriteLine("Hello, new driver. Welcome to Test Drive.");
+            Console.WriteLine("Hello, new driver. Welcome to CarGarage.");
 
             Console.WriteLine("What is your name?");
             Garage myGarage = new Garage();
@@ -29,70 +23,13 @@ namespace CarGarage
             Console.Clear();
             
             Console.WriteLine("Nice to meet you, " + myGarage.UserName + ". Lets get started by adding some cars to your garage.");
-
-            int howManyCars = GetNumOfCars();
-
-            for (int i = 0; i < howManyCars; i++)
-            {
-                int oneBase = i + 1;
-                Console.WriteLine("Car #" + oneBase + ":");
-
-                Console.WriteLine("What is the car's make?");
-                string tempMake = Console.ReadLine();
-
-                Console.WriteLine("What is the car's model");
-                string tempModel = Console.ReadLine();
-
-                Console.WriteLine("What is the car's year?");
-                string tempYear = Console.ReadLine();
-
-                myGarage.AddCar(tempMake, tempModel, tempYear);
-
-                Console.WriteLine("A " + tempYear + " " + tempMake + " " + tempModel + " has been added to your garage!");
-
-                Console.WriteLine("Now you have some vehicles to test drive. You are free to do as you please!");
-                
-            }
-
+            
             return myGarage;
-        }
-
-        static int GetNumOfCars()
-        {
-            bool error;
-            int numberOfCars = 0;
-            do
-            {
-                
-                Console.WriteLine("How many cars would you like to add?");
-                string checkIsNumber = Console.ReadLine();
-                if (int.TryParse(checkIsNumber, out numberOfCars))
-                {
-                    if (numberOfCars > 5)
-                    {
-                        Console.WriteLine("Lets keep it to 5 or less cars.");
-                        error = TryAgain();
-                    }
-                    else
-                    {
-                        error = false;
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("You must enter a number.");
-                    error = TryAgain();
-                }
-            } while (error);
-            Console.Clear();
-
-            return numberOfCars;
         }
 
         static bool TryAgain()
         {
             Console.WriteLine("\nPlease try again.");
-            Pause();
 
             return true;
         }
@@ -106,38 +43,46 @@ namespace CarGarage
 
         static void Menu(Garage myGarage)
         {
-
+            int selectedCar = 0;
             bool run = true;
             do
             {
                 Pause();
 
+                string menuTitle = "Main Menu | " + myGarage.UserName + "'s Garage | ";
+                if (myGarage.IsCarSelected)
+                {
+                    menuTitle += "Current Car: " + myGarage.ParkingSpots[selectedCar].Year + " " + myGarage.ParkingSpots[selectedCar].Make + " " + myGarage.ParkingSpots[selectedCar].Model;
+
+                }
+                else
+                {
+                    menuTitle += "No Car Selected";
+                }
+
                 List<string> menuItems = new List<string>()
                 {
-                    "Main Menu:"
+                    menuTitle,
+                    "1. Add Cars"
                 };
 
-                int menuIndex = 1;
-
-                if (myGarage.ParkingSpots.Count < 5)
-                {
-                    menuItems.Add(menuIndex + ". Add Cars");
-                    menuIndex++;
-                }
+                int menuIndex = 2;
+                
                 if (myGarage.ParkingSpots.Count > 0)
                 {
                     menuItems.Add(menuIndex + ". Remove Car");
                     menuIndex++;
-                }
-                if (myGarage.IsCarSelected)
-                {
-                    menuItems.Add(menuIndex + ". Return Car");
-                    menuIndex++;
-                }
-                else
-                {
-                    menuItems.Add(menuIndex + ". Test Drive Car");
-                    menuIndex++;
+
+                    if (myGarage.IsCarSelected)
+                    {
+                        menuItems.Add(menuIndex + ". Return Car");
+                        menuIndex++;
+                    }
+                    else
+                    {
+                        menuItems.Add(menuIndex + ". Drive Car");
+                        menuIndex++;
+                    }
                 }
                 menuItems.Add(menuIndex + ". Quit");
 
@@ -147,6 +92,7 @@ namespace CarGarage
                 }
 
                 ConsoleKeyInfo itemChosen = Console.ReadKey();
+                Console.WriteLine("");
 
                 int indexCheck = menuItems.Count + 1;
                 switch (itemChosen.Key)
@@ -184,28 +130,109 @@ namespace CarGarage
                 switch (itemSelected)
                 {
                     case "Add":
-                        Console.WriteLine("\nADDED\n");
+                        myGarage = UserAddsCar(myGarage);
                         break;
                     case "Rem":
-                        Console.WriteLine("\nREMOVED\n");
+                        myGarage = UserRemovesCar(myGarage);
                         break;
                     case "Ret":
-                        Console.WriteLine("\nRETURNED\n");
+                        myGarage.ReturnCar();
+                        selectedCar = -1;
                         break;
-                    case "Tes":
-                        Console.WriteLine("\nTEST DROVE\n");
+                    case "Dri":
+                        if(selectedCar == -1)
+                        {
+                            selectedCar = SelectCar(myGarage);
+                            myGarage.CheckoutCar();
+                        }
+                        DriveCar(selectedCar, myGarage);
                         break;
                     case "Qui":
-                        Console.WriteLine("\nQUIT\n");
-                        break;
+                        Console.WriteLine("Thank you for playing, CarGarage! See you next time!");
+                        return;
                     default:
                         TryAgain();
                         break;
                 }
-
-
-
             } while (run);
+        }
+
+        static Garage UserAddsCar(Garage myGarage)
+        {
+            Console.WriteLine("What is the car's make?");
+            string make = Console.ReadLine();
+
+            Console.WriteLine("What is the car's model");
+            string model = Console.ReadLine();
+
+            Console.WriteLine("What is the car's year?");
+            string year = Console.ReadLine();
+
+            myGarage.AddCar(make, model, year);
+
+            Console.WriteLine("A " + year + " " + make + " " + model + " has been added to your garage!");
+
+
+            return myGarage;
+        }
+
+        static Garage UserRemovesCar(Garage myGarage)
+        {
+            Console.WriteLine("Which car would you like to select?");
+            int whichCar = SelectCar(myGarage);
+
+            Console.WriteLine("A " + myGarage.ParkingSpots[whichCar].Year + " " + myGarage.ParkingSpots[whichCar].Make + " " + myGarage.ParkingSpots[whichCar].Model + " has been removed from your garage!");
+
+            myGarage.RemoveCar(whichCar);
+
+            return myGarage;
+        }
+
+        static int SelectCar(Garage myGarage)
+        {
+            int i = 1;
+            foreach (Car item in myGarage.ParkingSpots)
+            {
+                Console.WriteLine(i + ". " + item.Year + " " + item.Make + " " + item.Model);
+                i++;
+            }
+
+            bool error = false;
+            int selectedCar;
+            do
+            {
+                selectedCar = NumberCheck() - 1; 
+
+                if (selectedCar > myGarage.ParkingSpots.Count)
+                {
+                    error = TryAgain();
+                }
+            } while (error);
+
+            return selectedCar;            
+        }
+
+        static int NumberCheck()
+        {
+            bool error;
+            int definitelyNumber;
+            do
+            {
+                error = false;
+                string checkIsNumber = Console.ReadLine();
+                if (!int.TryParse(checkIsNumber, out definitelyNumber))
+                {
+                    Console.WriteLine("You must enter a number.");
+                    error = TryAgain();
+                }
+            } while (error);
+
+            return definitelyNumber;
+        }
+
+        static void DriveCar(int selectedCar, Garage myGarage)
+        {
+            
 
         }
 

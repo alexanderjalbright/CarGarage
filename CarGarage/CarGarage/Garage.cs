@@ -18,6 +18,8 @@ namespace CarGarage
 
         public bool IsCarSelected { get; private set; }
 
+        public string UserName { get; set; }
+
         public void AddCar(string newMake, string newModel, string newYear)
         {
             Car newCar = new Car();
@@ -54,6 +56,11 @@ namespace CarGarage
             ParkingSpots.Add(tempCar);
 
             IsCarSelected = false;
+        }
+
+        public void GetUserName(string name)
+        {
+            UserName = name;
         }
     }
 }

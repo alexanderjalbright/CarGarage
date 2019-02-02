@@ -14,7 +14,7 @@ namespace CarGarage.Tests
 
             // Act
             // NameOfInstance.ListProperty.Add(new ClassOfListItem());
-            myGarage.AddCar();
+            myGarage.AddCar("Lexus", "CT200h", "2012");
 
             // Assert
             Assert.NotEmpty(myGarage.ParkingSpots);
@@ -29,7 +29,7 @@ namespace CarGarage.Tests
             Garage myGarage = new Garage();
 
             // Act
-            myGarage.AddCar();
+            myGarage.AddCar("Lexus", "CT200h", "2012");
             myGarage.RemoveCar(0);
             // Assert
             Assert.Empty(myGarage.ParkingSpots);
@@ -42,16 +42,41 @@ namespace CarGarage.Tests
             // Arrange
             Garage myGarage = new Garage();
 
-            // Act
             myGarage.ParkingSpots.Add(new Car(50));
             myGarage.ParkingSpots.Add(new Car(50));
 
+            // Act
             myGarage.FuelAllCars();
 
             // Assert
             int combinedGasBothCars = myGarage.ParkingSpots[0].GasLevel + myGarage.ParkingSpots[1].GasLevel;
             Assert.Equal(2000, combinedGasBothCars);
 
+        }
+
+        [Fact]
+        public void car_is_selected()
+        {
+            Garage myGarage = new Garage();
+            myGarage.AddCar("Lexus", "CT200h", "2012");
+
+            myGarage.CheckoutCar(0);
+
+            Assert.Equal("Lexus", myGarage.SelectedCar.Make);
+        }
+
+
+        [Fact]
+        public void Return_Selected_Car()
+        {
+            Garage myGarage = new Garage();
+            myGarage.AddCar("Lexus", "CT200h", "2012");
+            myGarage.AddCar("Lambo", "Diablo", "2019");
+            myGarage.CheckoutCar(0);
+
+            myGarage.ReturnCar();
+
+            Assert.Equal("Lexus", myGarage.ParkingSpots[1].Make);
         }
 
         [Fact]

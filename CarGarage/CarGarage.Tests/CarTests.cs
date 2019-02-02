@@ -27,6 +27,7 @@ namespace CarGarage.Tests
             Car firstCar = new Car();
 
             // Act
+            firstCar.ToggleEngine();
             firstCar.Accelerate();
 
             // Assert
@@ -41,6 +42,7 @@ namespace CarGarage.Tests
             Car firstCar = new Car();
 
             // Act
+            firstCar.ToggleEngine();
             firstCar.Accelerate();
 
             // Assert

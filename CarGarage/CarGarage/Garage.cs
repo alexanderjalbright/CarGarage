@@ -6,16 +6,25 @@ namespace CarGarage
 {
     public class Garage
     {
-        public List<Car> ParkingSpots { get; private set; }
-
         public Garage()
         {
-            ParkingSpots = new List<Car>() { };
+            ParkingSpots = new List<Car>();
+            IsCarSelected = false;
         }
 
-        public void AddCar()
+        public List<Car> ParkingSpots { get; private set; }
+        
+        public Car SelectedCar { get; private set; }
+
+        public bool IsCarSelected { get; private set; }
+
+        public void AddCar(string newMake, string newModel, string newYear)
         {
-            ParkingSpots.Add(new Car());
+            Car newCar = new Car();
+
+            newCar.NewCar(newMake, newModel, newYear);
+
+            ParkingSpots.Add(newCar);
         }
 
         public void RemoveCar(int whichCar)
@@ -29,6 +38,22 @@ namespace CarGarage
             {
                 currentCar.AddFuel();
             }
+        }
+
+        public void CheckoutCar(int whichCar)
+        {
+            SelectedCar = ParkingSpots[whichCar];
+            IsCarSelected = true;
+        }
+
+        public void ReturnCar()
+        {
+            // This is to reorder cars to most recently used
+            Car tempCar = SelectedCar;
+            ParkingSpots.Remove(ParkingSpots[ParkingSpots.IndexOf(SelectedCar)]);
+            ParkingSpots.Add(tempCar);
+
+            IsCarSelected = false;
         }
     }
 }

@@ -55,9 +55,12 @@ namespace CarGarage.Tests
             // Tests AddFuel() method increases Fuel amount
             // Arrange
             Car firstCar = new Car();
+            firstCar.ToggleEngine();
+            firstCar.Accelerate();
+            firstCar.ToggleEngine();
 
             // Act
-            firstCar.Accelerate();
+
             firstCar.AddFuel();
 
             // Assert
@@ -72,7 +75,7 @@ namespace CarGarage.Tests
             Car firstCar = new Car(50);
 
             // Act
-            firstCar.Accelerate();
+            
             firstCar.AddFuel();
 
             // Assert
@@ -87,6 +90,7 @@ namespace CarGarage.Tests
             Car firstCar = new Car();
 
             // Act
+            firstCar.ToggleEngine();
             firstCar.Accelerate();
             firstCar.Brake();
 

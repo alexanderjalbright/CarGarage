@@ -9,12 +9,12 @@ namespace CarGarage
         public Garage()
         {
             ParkingSpots = new List<Car>();
-            IsCarSelected = false;
+            IsCarCheckedOut = false;
         }
 
         public List<Car> ParkingSpots { get; private set; }
 
-        public bool IsCarSelected { get; private set; }
+        public bool IsCarCheckedOut { get; private set; }
 
         public string UserName { get; set; }
 
@@ -40,14 +40,17 @@ namespace CarGarage
             }
         }
 
-        public void CheckoutCar()
+        public Car CheckoutCar(int whichCar)
         {
-            IsCarSelected = true;
+            IsCarCheckedOut = true;
+            return ParkingSpots[whichCar];
         }
 
-        public void ReturnCar()
+        public void ReturnCar(int whichCar, Car checkedOutCar)
         {
-            IsCarSelected = false;
+            IsCarCheckedOut = false;
+            ParkingSpots[whichCar] = checkedOutCar;
+
         }
 
         public void GetUserName(string name)

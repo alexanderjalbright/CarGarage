@@ -53,25 +53,33 @@ namespace CarGarage
                     {
                         GasLevel = MinGasLevel;
                         Speed = 0;
-                        Console.WriteLine("Gas is empty! You must abandon this car on the side of the road.");
+                        Console.WriteLine("You're out of gas!");
+                        Console.WriteLine("Press any key to continue");
+                        Console.ReadKey();
                     }
 
-                }
-                else
-                {
-
-                }
-                
+                }                
             }
             else
             {
                 Console.WriteLine("\nCar must be running to accelerate.");
+                Console.WriteLine("Press any key to continue");
+                Console.ReadKey();
             }
         }
 
         public void AddFuel()
         {
-            GasLevel = MaxGasLevel;
+            if (CarStarted)
+            {
+                Console.WriteLine("\nYou have to turn off your car to put gas in it!");
+                Console.WriteLine("Press any key to continue");
+                Console.ReadKey();
+            }
+            else
+            {
+                GasLevel = MaxGasLevel;
+            }
         }
 
         public void Brake()

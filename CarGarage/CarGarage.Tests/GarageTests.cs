@@ -42,8 +42,23 @@ namespace CarGarage.Tests
             // Arrange
             Garage myGarage = new Garage();
 
-            myGarage.ParkingSpots.Add(new Car(50));
-            myGarage.ParkingSpots.Add(new Car(50));
+            myGarage.AddCar("Lexus", "CT200h", "2012");
+            myGarage.AddCar("Lexus", "CT200h", "2012");
+            Car car1 = myGarage.CheckoutCar(0);
+            Car car2 = myGarage.CheckoutCar(1);
+
+            car1.ToggleEngine();
+            car2.ToggleEngine();
+
+            car1.Accelerate();
+            car2.Accelerate();
+
+            car1.ToggleEngine();
+            car2.ToggleEngine();
+
+            myGarage.ReturnCar(0,car1);
+            myGarage.ReturnCar(1, car2);
+
 
             // Act
             myGarage.FuelAllCars();
@@ -60,9 +75,9 @@ namespace CarGarage.Tests
             Garage myGarage = new Garage();
             myGarage.AddCar("Lexus", "CT200h", "2012");
 
-            myGarage.CheckoutCar(0);
+            Car checkedOutCar = myGarage.CheckoutCar(0);
 
-            Assert.Equal("Lexus", myGarage.SelectedCar.Make);
+            Assert.Equal("Lexus", checkedOutCar.Make);
         }
 
 
@@ -72,11 +87,13 @@ namespace CarGarage.Tests
             Garage myGarage = new Garage();
             myGarage.AddCar("Lexus", "CT200h", "2012");
             myGarage.AddCar("Lambo", "Diablo", "2019");
-            myGarage.CheckoutCar(0);
+            Car checkedOutCar = myGarage.CheckoutCar(0);
 
-            myGarage.ReturnCar();
+            checkedOutCar.ToggleEngine();
 
-            Assert.Equal("Lexus", myGarage.ParkingSpots[1].Make);
+            myGarage.ReturnCar(0, checkedOutCar);
+
+            Assert.True(myGarage.ParkingSpots[0].CarStarted);
         }
 
         [Fact]

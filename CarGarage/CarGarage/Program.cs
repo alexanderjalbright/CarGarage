@@ -43,16 +43,17 @@ namespace CarGarage
 
         static void Menu(Garage myGarage)
         {
-            int selectedCar = 0;
+            Car selectedCar = new Car();
+            int selectedCarIndex = -1;
             bool run = true;
             do
             {
                 Pause();
 
                 string menuTitle = "Main Menu | " + myGarage.UserName + "'s Garage | ";
-                if (myGarage.IsCarSelected)
+                if (myGarage.IsCarCheckedOut)
                 {
-                    menuTitle += "Current Car: " + myGarage.ParkingSpots[selectedCar].Year + " " + myGarage.ParkingSpots[selectedCar].Make + " " + myGarage.ParkingSpots[selectedCar].Model;
+                    menuTitle += "Current Car: " + selectedCar.Year + " " + selectedCar.Make + " " + selectedCar.Model;
 
                 }
                 else
@@ -73,7 +74,7 @@ namespace CarGarage
                     menuItems.Add(menuIndex + ". Remove Car");
                     menuIndex++;
 
-                    if (myGarage.IsCarSelected)
+                    if (myGarage.IsCarCheckedOut)
                     {
                         menuItems.Add(menuIndex + ". Return Car");
                         menuIndex++;
@@ -83,6 +84,9 @@ namespace CarGarage
                         menuItems.Add(menuIndex + ". Drive Car");
                         menuIndex++;
                     }
+                    menuItems.Add(menuIndex + ". Refuel All Cars");
+                    menuIndex++;
+
                 }
                 menuItems.Add(menuIndex + ". Quit");
 
@@ -136,16 +140,14 @@ namespace CarGarage
                         myGarage = UserRemovesCar(myGarage);
                         break;
                     case "Ret":
-                        myGarage.ReturnCar();
-                        selectedCar = -1;
+                        myGarage.ReturnCar(selectedCarIndex, selectedCar);
                         break;
                     case "Dri":
-                        if(selectedCar == -1)
-                        {
-                            selectedCar = SelectCar(myGarage);
-                            myGarage.CheckoutCar();
-                        }
-                        DriveCar(selectedCar, myGarage);
+                        selectedCarIndex = SelectCar(myGarage);
+                        selectedCar = DriveCarMenu(myGarage.CheckoutCar(selectedCarIndex));
+                        break;
+                    case "Ref":
+                        myGarage.FuelAllCars();
                         break;
                     case "Qui":
                         Console.WriteLine("Thank you for playing, CarGarage! See you next time!");
@@ -196,7 +198,7 @@ namespace CarGarage
                 Console.WriteLine(i + ". " + item.Year + " " + item.Make + " " + item.Model);
                 i++;
             }
-
+            Console.WriteLine("Which car would you like to drive?");
             bool error = false;
             int selectedCar;
             do
@@ -230,10 +232,65 @@ namespace CarGarage
             return definitelyNumber;
         }
 
-        static void DriveCar(int selectedCar, Garage myGarage)
+        static Car DriveCarMenu(Car currentCar)
         {
-            
+            bool run = true;
+            do
+            {
+                Console.Clear();
 
+                
+                Console.WriteLine("Drive Menu | " + currentCar.Year + " " + currentCar.Make+ " " + currentCar.Model);
+                decimal gasLevel = currentCar.GasLevel/10;
+
+                Console.WriteLine("\nGas Level: " + gasLevel + "%");
+                Console.WriteLine("\nSpeed: " + currentCar.Speed + " MPH\n");
+
+                if (currentCar.CarStarted)
+                {
+                    Console.WriteLine("Press A to turn Off car");
+                    Console.WriteLine("Press UP ARROW to accelerate");
+                    Console.WriteLine("Press DOWN ARROW to brake");
+                }
+                else
+                {
+                    Console.WriteLine("Press A to turn on car");
+                    Console.WriteLine("Press F to add fuel to car");
+                }
+                
+                Console.WriteLine("Press R to return to your garage");
+
+                ConsoleKeyInfo userChoice = Console.ReadKey();
+                switch (userChoice.Key)
+                {
+                    case ConsoleKey.A:
+                        currentCar.ToggleEngine();
+                        break;
+                    case ConsoleKey.UpArrow:
+                        currentCar.Accelerate();
+                        break;
+                    case ConsoleKey.DownArrow:
+                        currentCar.Brake();
+                        break;
+                    case ConsoleKey.F:
+                        currentCar.AddFuel();
+                        break;
+                    case ConsoleKey.R:
+                        if (currentCar.CarStarted)
+                        {
+                            Console.WriteLine("You must turn you car off!");
+                            Pause();
+                        }
+                        else
+                        {
+                            run = false;
+                        }
+                        
+                        break;
+                }
+            } while (run);
+
+            return currentCar;
         }
 
     }

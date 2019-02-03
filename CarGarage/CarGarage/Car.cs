@@ -42,44 +42,27 @@ namespace CarGarage
                      
         public void Accelerate()
         {
-            if (CarStarted)
+            if (CarStarted && GasLevel > MinGasLevel)
             {
-                if (GasLevel > MinGasLevel)
+                int changeRate = 10 + (Speed / 10);
+                Speed += changeRate;
+                GasLevel -= changeRate;
+                if (GasLevel < MinGasLevel)
                 {
-                    int changeRate = 10 + (Speed / 10);
-                    Speed += changeRate;
-                    GasLevel -= changeRate;
-                    if (GasLevel < MinGasLevel)
-                    {
-                        GasLevel = MinGasLevel;
-                        Speed = 0;
-                        Console.WriteLine("You're out of gas!");
-                        Console.WriteLine("Press any key to continue");
-                        Console.ReadKey();
-                    }
+                    GasLevel = MinGasLevel;
+                    Speed = 0;
 
-                }                
-            }
-            else
-            {
-                Console.WriteLine("\nCar must be running to accelerate.");
-                Console.WriteLine("Press any key to continue");
-                Console.ReadKey();
-            }
+                }
+            }   
         }
 
         public void AddFuel()
         {
-            if (CarStarted)
-            {
-                Console.WriteLine("\nYou have to turn off your car to put gas in it!");
-                Console.WriteLine("Press any key to continue");
-                Console.ReadKey();
-            }
-            else
+            if (!CarStarted)
             {
                 GasLevel = MaxGasLevel;
             }
+            
         }
 
         public void Brake()

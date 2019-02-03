@@ -267,12 +267,27 @@ namespace CarGarage
                         currentCar.ToggleEngine();
                         break;
                     case ConsoleKey.UpArrow:
+                        if(currentCar.GasLevel == currentCar.MinGasLevel)
+                        {
+                            Console.WriteLine("You're out of gas!");
+                            Pause();
+                        }
+                        if(!currentCar.CarStarted)
+                        {
+                            Console.WriteLine("You're car is off!");
+                            Pause();
+                        }
                         currentCar.Accelerate();
                         break;
                     case ConsoleKey.DownArrow:
                         currentCar.Brake();
                         break;
                     case ConsoleKey.F:
+                        if (currentCar.CarStarted)
+                        {
+                            Console.WriteLine("You must turn you car off!");
+                            Pause();
+                        }
                         currentCar.AddFuel();
                         break;
                     case ConsoleKey.R:
